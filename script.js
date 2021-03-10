@@ -135,7 +135,6 @@ function scoresToDOM(){
 
 // Stop Timer, process results, go to score page
 function checkTime(){
-  console.log(timePlayed);
   if(playerGuessArray.length == questionAmount){
     console.log('player guess array', playerGuessArray);
     clearInterval(timer);
@@ -195,10 +194,10 @@ function getRandomInt(max){
 function createEquations() {
   // Randomly choose how many correct equations there should be
   const correctEquations = getRandomInt(questionAmount);
-  console.log(correctEquations);
+  console.log('number of correct answers:', correctEquations);
   // Set amount of wrong equations
   const wrongEquations = questionAmount - correctEquations;
-  console.log(wrongEquations);
+  console.log('number of wrong answers:', wrongEquations);
   // Loop through, multiply random numbers up to 9, push to array
   for (let i = 0; i < correctEquations; i++) {
     firstNumber = getRandomInt(9);
@@ -276,16 +275,19 @@ function getRadioValue(){
 
 // show countdown
 function countdownStart(){
-  countdown.textContent = '3';
-  setTimeout(() => {
-    countdown.textContent = '2';
-  }, 1000);
-  setTimeout(() => {
-    countdown.textContent = '1';
-  }, 2000);
-  setTimeout(() => {
-    countdown.textContent = 'GO!';
-  }, 3000);
+let count = 3;
+countdown.textContent = count;
+const timeCountDown = setInterval(() =>{
+  count--;
+  if(count === 0){
+    countdown.textContent = 'Go!';
+  }else if(count === -1){
+    showGamePage();
+    clearInterval(timeCountDown);
+  }else{
+  countdown.textContent = count;
+  }
+  }, 1000)
 }
 
 // Navigate from splash to countdown
@@ -294,14 +296,13 @@ function showCountdown(){
     splashPage.hidden = true;
     countdownStart();
     populateGamePage();
-    setTimeout(showGamePage, 4000);
+    
 }
 
 // form that decides amount of questions
 function selectQuestionAmount(e){
   e.preventDefault();
   questionAmount = getRadioValue();
-  console.log(questionAmount);
   if(questionAmount){
     showCountdown();
   }
